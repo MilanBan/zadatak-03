@@ -18,6 +18,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $fields['name'],
             'email' => $fields['email'],
+            'role_id' => 3,
             'password' => bcrypt($fields['password'])
         ]);
 
@@ -53,7 +54,7 @@ class AuthController extends Controller
             'token' => $token
         ];
 
-        return response($response, 201);
+        return response($response, 200);
     }
 
     public function logout(Request $request) {

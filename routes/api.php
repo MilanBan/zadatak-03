@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +19,13 @@ use App\Http\Controllers\AuthController;
 //public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/roles', [RoleController::class, 'index']);
+Route::put('/roles/{role}', [RoleController::class, 'editRole']);
 
+
+
+//protected routes
 Route::group(['middleware' =>['auth:sanctum']], function () {
-    //protected routes
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/users', function () {
         return 'Hello';
