@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Role;
+use App\Models\Mentor;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -47,4 +48,31 @@ class User extends Authenticatable
     public function role() {
         return $this->belongsTo(Role::class);
     }
+
+    public function mentor() {
+        return $this->hasOne(Mentor::class);
+    }
+
+    public const VALIDATION_RULES = [
+        'firstName' => [
+            'string',
+            'min:2',
+            'max:20'
+        ],
+        'lastName' => [
+            'string',
+            'min:2',
+            'max:20'
+        ],
+        'email' => [
+            'string',
+            'email',
+            'max:255'
+        ],
+        'password' => [
+            'string',
+            'confirmed',
+            'min:8'
+        ]
+    ];
 }
