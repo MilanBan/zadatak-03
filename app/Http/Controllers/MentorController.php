@@ -14,7 +14,6 @@ class MentorController extends Controller
     public function index() {
         return Mentor::with('user')->get();
     }
-
     public function show($id) {
         return Mentor::with('user.role')->findOrFail($id);
     }
