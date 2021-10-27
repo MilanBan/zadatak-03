@@ -20,8 +20,8 @@ class Group extends Model
         return $this->hasMany(Intern::class);
     }
 
-    public function mentors(): HasMany
+    public function mentors()
     {
-        return $this->hasMany(Mentor::class);
+        return $this->belongsToMany(Mentor::class);
     }
 }

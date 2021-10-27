@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MentorController;
 
 /*
@@ -30,6 +31,8 @@ Route::post('/mentors/create', [MentorController::class, 'store']);
 Route::put('/mentors/update/{mentor}', [MentorController::class, 'update']);
 Route::delete('/mentors/delete/{mentor}', [MentorController::class, 'destroy']);
 
+Route::get('/groups', [GroupController::class, 'index']);
+Route::get('/groups/{group}', [GroupController::class, 'show']);
 
 
 //protected routes

@@ -12,14 +12,14 @@ class Mentor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'city', 'skype','group_id'
+        'user_id', 'city', 'skype'
     ];
 
     public function user() {
         return $this->belongsTo(User::class);
     }
     public function groups() {
-        return $this->belongToMany(Group::class);
+        return $this->belongsToMany(Group::class);
     }
     
     public const VALIDATION_RULES = [

@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class MentorController extends Controller
 {
     public function index() {
-        return Mentor::with('user')->get();
+        return Mentor::with('user', 'groups')->get();
+       
     }
     public function show($id) {
-        return Mentor::with('user.role')->findOrFail($id);
+        return Mentor::with('user.role', 'groups')->findOrFail($id);
     }
 
     public function store(StoreMentorRequest $request) {
@@ -36,6 +37,8 @@ class MentorController extends Controller
 
         $mentor->save();
 
+        $mentor->groups()->sync($request->input('group_id'));
+
         $response = [
             'user' => $user,
             'mentor' => $mentor
@@ -53,6 +56,8 @@ class MentorController extends Controller
 
         $mentor->update($request->all());
         $mentor->user->update($request->all());
+        $mentor->groups()->sync($request->input('group_id'));
+
 
         $response = [
             'mentor' => $mentor
@@ -63,12 +68,13 @@ class MentorController extends Controller
 
     public function destroy($id) {
         
-        $mentor = Mentor::destroy($id);
-
-        if($mentor == 0) {
+        $mentor = Mentor::find($id);
+        if(!$mentor) {
             $response = ['message' => "Mentor does not exist."];
-
+            
             return response($response, 404);
         }
+        $user_id = $mentor->user->id;
+        User::find($user_id)->delete();
     }
 }

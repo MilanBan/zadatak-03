@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddForeignKeyToMentorsTable extends Migration
+class CreateGroupMentorTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddForeignKeyToMentorsTable extends Migration
      */
     public function up()
     {
-        Schema::table('mentors', function (Blueprint $table) {
-            $table->foreignId('group_id')->nullable()->constrained('groups');
+        Schema::create('group_mentor', function (Blueprint $table) {
+            $table->foreignId('group_id')->constrained()->onDelete('cascade');
+            $table->foreignId('mentor_id')->constrained()->onDelete('cascade');
         });
     }
 
@@ -25,8 +26,6 @@ class AddForeignKeyToMentorsTable extends Migration
      */
     public function down()
     {
-        Schema::table('mentors', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('group_mentor');
     }
 }

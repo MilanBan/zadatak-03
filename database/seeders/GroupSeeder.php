@@ -17,18 +17,25 @@ class GroupSeeder extends Seeder
     
         DB::table('groups')->insert([
             'name' => 'FE',
+            'created_at' => date('Y-m-d H:i:s')
         ]);
 
         DB::table('groups')->insert([
             'name' => 'BE',
+            'created_at' => date('Y-m-d H:i:s')
+
         ]);
         
         DB::table('groups')->insert([
             'name' => 'Devops',
+            'created_at' => date('Y-m-d H:i:s')
+
         ]);
 
         DB::table('groups')->insert([
             'name' => 'FS',
+            'created_at' => date('Y-m-d H:i:s')
+
         ]);
         
     }

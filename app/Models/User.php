@@ -51,7 +51,7 @@ class User extends Authenticatable
     }
 
     public function mentor() {
-        return $this->hasOne(Mentor::class);
+        return $this->belongsTo(Mentor::class);
     }
 
     public const VALIDATION_RULES = [

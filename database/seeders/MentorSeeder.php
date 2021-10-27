@@ -36,7 +36,7 @@ class MentorSeeder extends Seeder
             $selected = array_rand($dataT, 1);  
             
             $m = new Mentor();
-            $m->group_id = rand(1,4);
+            // $m->group_id = rand(1,4);
             $m->user_id = $dataT[$selected];
             $m->city = $f->city;
             $m->skype = $f->userName;
