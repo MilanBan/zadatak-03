@@ -28,7 +28,7 @@ class InternFactory extends Factory
             'address' => $this->faker->address(),
             'email' => $this->faker->unique()->safeEmail(),
             'telephone' => $this->faker->phoneNumber(),
-            'cv' => $this->faker->url(),
+            'cv' => $this->faker->name().'.pdf',
             'github' => $this->faker->url(),
             'group_id' => $this->faker->numberBetween(1,4),
         ];

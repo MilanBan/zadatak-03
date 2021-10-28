@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Intern;
-use Illuminate\Http\Request;
+use App\Http\Requests\InternRequest;
 
 class InternController extends Controller
 {
@@ -15,7 +15,7 @@ class InternController extends Controller
         return Intern::with('group.mentors.user')->findOrFail($id);
     }
 
-    public function store(Request $request) {
+    public function store(InternRequest $request) {
         $intern = Intern::create($request->all());
 
         $response = [
@@ -25,7 +25,7 @@ class InternController extends Controller
         return response($response, 201);
     }
 
-    public function update(Request $request, Intern $intern) {
+    public function update(InternRequest $request, Intern $intern) {
         $intern->update($request->all());
         $response = [
             'intern' => $intern

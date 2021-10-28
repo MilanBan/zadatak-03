@@ -24,4 +24,13 @@ class Group extends Model
     {
         return $this->belongsToMany(Mentor::class);
     }
+
+    public const VALIDATION_RULES = [
+        'name' => [
+            'string',
+            'min:2',
+            'max:20'
+        ]
+    ];
+
 }

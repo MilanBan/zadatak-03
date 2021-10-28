@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Mentor;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\StoreMentorRequest;
+use App\Http\Requests\MentorRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class MentorController extends Controller
@@ -19,7 +18,7 @@ class MentorController extends Controller
         return Mentor::with('user.role', 'groups.interns')->findOrFail($id);
     }
 
-    public function store(StoreMentorRequest $request) {
+    public function store(MentorRequest $request) {
 
         $user = new User();
         $user->firstName = $request->input('firstName');
@@ -47,7 +46,7 @@ class MentorController extends Controller
         return response($response, 201);
     }
 
-    public function update(StoreMentorRequest $request,  $id) {
+    public function update(MentorRequest $request,  $id) {
         try{
             $mentor = Mentor::with('user')->findOrFail($id);
         }catch (ModelNotFoundException $e){

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
-use Illuminate\Http\Request;
+use App\Http\Requests\GroupRequest;
 
 class GroupController extends Controller
 {
@@ -15,7 +15,7 @@ class GroupController extends Controller
         return Group::with('mentors.user', 'interns')->findOrFail($id);
     }
 
-    public function store(Request $request) {
+    public function store(GroupRequest $request) {
         $g = Group::create($request->all());
 
         $response = [
@@ -25,7 +25,7 @@ class GroupController extends Controller
         return response($response, 201);
     }
 
-    public function update(Request $request, Group $group) {
+    public function update(GroupRequest $request, Group $group) {
         $group->update($request->all());
         $response = [
             'group' => $group

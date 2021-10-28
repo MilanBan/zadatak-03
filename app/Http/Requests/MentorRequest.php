@@ -3,10 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Models\Mentor;
-use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UserRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreMentorRequest extends FormRequest
+class MentorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,13 +25,13 @@ class StoreMentorRequest extends FormRequest
      */
     public function rules()
     {
-        $rulesU = new StoreUserRequest;
+        $rulesU = new UserRequest;
         $rulesU = $rulesU->rules(); 
         
         $rulesM = Mentor::VALIDATION_RULES;
         
         
-        if($this->getMethod() == 'POST') {
+        if ($this->getMethod() == 'POST') {
             $rulesM['city'] = 'required';
             $rulesM['skype'] = 'required';
         }
