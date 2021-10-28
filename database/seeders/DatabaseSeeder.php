@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MentorSeeder::class);           // 10
         // \App\Models\Mentor::factory()->create();    // 20
         $this->call(InternSeeder::class);           // 40
+        $this->call(GroupMentorSeeder::class);           // 10
     }
 }

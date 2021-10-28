@@ -15,7 +15,7 @@ class Group extends Model
         'name'
     ];
 
-    public function interns(): HasMany
+    public function interns()
     {
         return $this->hasMany(Intern::class);
     }

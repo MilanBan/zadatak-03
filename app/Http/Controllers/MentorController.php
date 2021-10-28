@@ -16,7 +16,7 @@ class MentorController extends Controller
        
     }
     public function show($id) {
-        return Mentor::with('user.role', 'groups')->findOrFail($id);
+        return Mentor::with('user.role', 'groups.interns')->findOrFail($id);
     }
 
     public function store(StoreMentorRequest $request) {
