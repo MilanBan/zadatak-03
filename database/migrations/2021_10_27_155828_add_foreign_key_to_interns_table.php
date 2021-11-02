@@ -14,7 +14,7 @@ class AddForeignKeyToInternsTable extends Migration
     public function up()
     {
         Schema::table('interns', function (Blueprint $table) {
-            $table->foreignId('group_id')->nullable()->constrained('groups');
+            $table->foreignId('group_id')->nullable()->after('id')->constrained('groups');
         });
     }
 

@@ -14,7 +14,7 @@ class AddForeignKeyToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('role_id')->nullable()->constrained('roles');
+            $table->foreignId('role_id')->nullable()->after('id')->constrained('roles');
 
         });
     }
