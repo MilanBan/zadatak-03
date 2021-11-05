@@ -7,6 +7,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\InternController;
 use App\Http\Controllers\MentorController;
+use App\Http\Controllers\AssignmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,8 +24,12 @@ use App\Http\Controllers\MentorController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/roles', [RoleController::class, 'index']);
-Route::put('/roles/{role}', [RoleController::class, 'editRole']);
+
+Route::get('/assignments', [AssignmentController::class, 'index']);
+Route::get('/assignments/{assignment}', [AssignmentController::class, 'show']);
+Route::post('/assignments/{assignment}/add', [AssignmentController::class, 'addToGroup']);
+Route::delete('/assignments/{assignment}/remove', [AssignmentController::class, 'removeFromGroup']);
+
 
 Route::get('/mentors', [MentorController::class, 'index']);
 Route::get('/mentors/{mentor}', [MentorController::class, 'show']);
@@ -37,6 +42,7 @@ Route::get('/groups/{group}', [GroupController::class, 'show']);
 Route::post('/groups/create', [GroupController::class, 'store']);
 Route::put('/groups/{group}', [GroupController::class, 'update']);
 Route::delete('/groups/{group}', [GroupController::class, 'destroy']);
+Route::put('/groups/{g_id}/{a_id}/active', [GroupController::class, 'activeChanger']);
 
 Route::get('/interns', [InternController::class, 'index']);
 Route::get('/interns/{intern}', [InternController::class, 'show']);
@@ -47,7 +53,21 @@ Route::delete('/interns/{intern}', [InternController::class, 'destroy']);
 //protected routes
 Route::group(['middleware' =>['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/users', function () {
-        return 'Hello';
+    
+    Route::get('/roles', [RoleController::class, 'index']); // list of roles
+    
+    
+    //guards - recruiter lvl
+    Route::group(['middleware' =>['recruiter']], function () {
+        Route::get('/users', function () {
+            return 'Hello';
+        });
+            
+
+        //guards - admin lvl
+        Route::group(['middleware' =>['recruiter']], function () {
+                Route::put('/roles/{role}', [RoleController::class, 'editRole']); // edit role
+
+            });
     });
 });

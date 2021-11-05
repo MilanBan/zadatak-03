@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\Group;
-use App\Models\Mentor;
+use App\Models\Assignment;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class GroupMentorSeeder extends Seeder
+class AssignmentGroupSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,12 +16,12 @@ class GroupMentorSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=0;$i<8;$i++) { 
+        for ($i=0;$i<10;$i++) { 
                
-            DB::table('group_mentor')->insert(
+            DB::table('assignment_group')->insert(
                 [
                     'group_id' => Group::select('id')->orderByRaw("RAND()")->first()->id,
-                    'mentor_id' => Mentor::select('id')->orderByRaw("RAND()")->first()->id,
+                    'assignment_id' => Assignment::select('id')->orderByRaw("RAND()")->first()->id,
                 ]
             );
         }

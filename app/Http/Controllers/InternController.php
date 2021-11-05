@@ -8,11 +8,11 @@ use App\Http\Requests\InternRequest;
 class InternController extends Controller
 {
     public function index() {
-        return Intern::with('group.mentors')->get();
+        return Intern::with('group.mentors.user')->get();
     }
 
     public function show($id) {
-        return Intern::with('group.mentors.user')->findOrFail($id);
+        return Intern::with('group.mentors.user','group.assignments')->findOrFail($id);
     }
 
     public function store(InternRequest $request) {
