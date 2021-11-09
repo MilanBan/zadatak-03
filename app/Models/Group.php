@@ -32,15 +32,17 @@ class Group extends Model
 
     public function assignments()
     {
-        return $this->belongsToMany(Assignment::class, 'assignment_group', 'assignment_id', 'group_id')
-            ->withPivot(['start_date', 'finish_date', 'active']);
+        return $this->belongsToMany(Assignment::class)
+            ->withPivot([ 'created_at', 'start_date', 'finish_date', 'active']);
     }
 
     public const VALIDATION_RULES = [
         'name' => [
             'string',
             'min:2',
-            'max:20'
+            'max:20',
+            'unique:groups,name',
+
         ]
     ];
 

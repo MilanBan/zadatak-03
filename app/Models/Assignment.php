@@ -18,7 +18,7 @@ class Assignment extends Model
     public function groups()
     {
         return $this->belongsToMany(Group::class)
-            ->withPivot(['start_date', 'finish_date', 'active']);
+            ->withPivot([ 'created_at', 'start_date', 'finish_date', 'active']);
     }
 
     public const VALIDATION_RULES = [

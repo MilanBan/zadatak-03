@@ -7,15 +7,17 @@ use App\Models\Assignment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AssignmentRequest;
+use App\Http\Resources\ShowAssignmentsResource;
+use App\Http\Resources\IndexAssignmentsResource;
 
 class AssignmentController extends Controller
 {
     public function index() {
-        return Assignment::with(['groups'])->get();
+        return IndexAssignmentsResource::collection(Assignment::with(['groups'])->get());
     }
 
     public function show($id) {
-        return Assignment::with(['groups.mentors', 'groups.interns'])->findOrFail($id);
+        return new ShowAssignmentsResource(Assignment::with(['groups.mentors', 'groups.interns'])->findOrFail($id));
     }
 
     public function create(AssignmentRequest $request) {
@@ -62,12 +64,10 @@ class AssignmentController extends Controller
     }
 
     public function removeFromGroup($id, Request $request) {
-        
         DB::table('assignment_group')
             ->where('assignment_id',$id)
             ->where('group_id',$request->input('group_id'))
             ->delete();
-
     }
 
 }

@@ -22,6 +22,7 @@ class AssignmentGroupSeeder extends Seeder
                 [
                     'group_id' => Group::select('id')->orderByRaw("RAND()")->first()->id,
                     'assignment_id' => Assignment::select('id')->orderByRaw("RAND()")->first()->id,
+                    'created_at' => date('Y-m-d H:i:s'),
                 ]
             );
         }

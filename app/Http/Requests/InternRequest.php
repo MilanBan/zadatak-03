@@ -27,14 +27,13 @@ class InternRequest extends FormRequest
         $rules = Intern::VALIDATION_RULES;
         
         if ($this->getMethod() == 'POST') {
-            $rules['city'] = 'required';
-            $rules['telephone'] = 'required';
-            $rules['firstName'] = 'required';
-            $rules['lastName'] = 'required';
-            $rules['email'] = 'required';
-            $rules['address'] = 'required';
-            $rules['cv'] = 'required';
-            $rules['git'] = 'required';
+            array_push($rules['city'], 'required');
+            array_push($rules['telephone'], 'required');
+            array_push($rules['firstName'], 'required');
+            array_push($rules['lastName'], 'required');
+            array_push($rules['email'],'required','unique:interns,email');            $rules['address'] = 'required';
+            array_push($rules['cv'], 'required');
+            array_push($rules['github'], 'required');
         }
 
         return $rules;

@@ -5,19 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RoleController extends Controller
 {
-    public function index() {
-        return Role::with('users')->get();
+    public function indexR() {
+        return response()->success(Role::with('users')->get());
+    }
+    public function indexU() {
+        return UserResource::collection(User::all());
+
     }
 
     public function editRole(Request $request, $id) {
         try{
             $user = User::findOrFail($id);      
         }catch (ModelNotFoundException $e) {
-            return response(['message' => "user doesn't exist"], 404);
+            return response()->error("user doesn't exist", 404);
         }
 
         $request->validate([
@@ -27,7 +32,7 @@ class RoleController extends Controller
         $user->role_id = $request->role_id;
 
         $user->update();
-        return response($user, 202);
-    }
 
+        return new UserResource($user);
+    }
 }

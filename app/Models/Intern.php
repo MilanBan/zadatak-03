@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Group;
 use App\Models\Mentor;
+use App\Models\Assignment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -18,6 +19,11 @@ class Intern extends Model
     
     public function group() {
         return $this->belongsTo(Group::class);
+            // ->using(Assignment::class);
+    }
+
+    public function assignments() {
+        return $this->hasManyThrough(Assignment::class, Group::class);
     }
 
     public const VALIDATION_RULES = [

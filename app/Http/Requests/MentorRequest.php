@@ -32,8 +32,8 @@ class MentorRequest extends FormRequest
         
         
         if ($this->getMethod() == 'POST') {
-            $rulesM['city'] = 'required';
-            $rulesM['skype'] = 'required';
+            array_push($rulesU['city'], 'required');
+            array_push($rulesM['skype'], 'required');
         }
 
         $rules = array_merge($rulesU,$rulesM);

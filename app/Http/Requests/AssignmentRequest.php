@@ -27,8 +27,8 @@ class AssignmentRequest extends FormRequest
         $rules = Assignment::VALIDATION_RULES;
 
         if ($this->getMethod() == 'POST') {
-            $rules['name'] = 'required';
-            $rules['description'] = 'required';
+            array_push($rules['name'], 'required');
+            array_push($rules['description'], 'required');
         }
 
         return $rules;

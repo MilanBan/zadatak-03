@@ -6,16 +6,19 @@ use App\Models\User;
 use App\Models\Mentor;
 use Illuminate\Http\Request;
 use App\Http\Requests\MentorRequest;
+use App\Http\Resources\MentorResource;
+use App\Http\Resources\ShowMentorResource;
+use App\Http\Resources\IndexMentorsResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class MentorController extends Controller
 {
     public function index() {
-        return Mentor::with('user', 'groups')->get();
-       
+        return IndexMentorsResource::collection(Mentor::with('user', 'groups')->get()); 
     }
     public function show($id) {
-        return Mentor::with('user.role', 'groups.interns')->findOrFail($id);
+        $m = Mentor::with('user.role', 'groups.interns')->findOrFail($id);
+        return new ShowMentorResource($m);
     }
 
     public function store(MentorRequest $request) {
@@ -37,42 +40,33 @@ class MentorController extends Controller
         $mentor->save();
 
         $mentor->groups()->sync($request->input('group_id'));
-
-        $response = [
-            'user' => $user,
-            'mentor' => $mentor
-        ];
-
-        return response($response, 201);
+        
+        $mentor->user = $user;
+        
+        return new MentorResource($mentor);
     }
 
     public function update(MentorRequest $request,  $id) {
         try{
             $mentor = Mentor::with('user')->findOrFail($id);
         }catch (ModelNotFoundException $e){
-            return response(['message' => "Mentor with this id don't exists."], 404);
+            return response()->error("Mentor with this id don't exists.", 404);
         }
 
         $mentor->update($request->all());
         $mentor->user->update($request->all());
         $mentor->groups()->sync($request->input('group_id'));
 
-
-        $response = [
-            'mentor' => $mentor
-        ];
-
-        return response($response, 200);
+        return new MentorResource($mentor);
     }
 
     public function destroy($id) {
         
         $mentor = Mentor::find($id);
         if(!$mentor) {
-            $response = ['message' => "Mentor does not exist."];
-            
-            return response($response, 404);
+            return response()->error("Mentor with this id don't exists.", 404);
         }
+
         $user_id = $mentor->user->id;
         User::find($user_id)->delete();
     }

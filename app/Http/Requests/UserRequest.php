@@ -27,10 +27,10 @@ class UserRequest extends FormRequest
         $rules = User::VALIDATION_RULES;
 
         if($this->getMethod() == 'POST') {
-            $rules['firstName'] = 'required'; 
-            $rules['lastName'] = 'required'; 
+            array_push($rules['firstName'], 'required'); 
+            array_push($rules['lastName'], 'required'); 
             array_push($rules['email'],'required','unique:users,email'); 
-            $rules['password'] = 'required';
+            array_push($rules['password'], 'required');
         }
 
         return $rules;
