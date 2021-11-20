@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Helper;
+namespace App\Http\Resources\Group;
 
+use App\Http\Resources\Intern\ListInternsResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ListInternsResource extends JsonResource
+class GroupWithListInternsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +16,9 @@ class ListInternsResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => (string)$this->id,
-            'firstName' => $this->firstName,
-            'lastName' => $this->lastName,
+            'id' => (string) $this->id,
+            'name' => $this->name,
+            'interns' => ListInternsResource::collection($this->interns),
         ];
     }
 }

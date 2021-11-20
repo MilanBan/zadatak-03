@@ -27,7 +27,7 @@ class GroupRequest extends FormRequest
         $rules = Group::VALIDATION_RULES;
 
         if ($this->getMethod() == 'POST') {
-            array_push($rules['name'], 'required');
+            $rules['name'] = ['string', 'min:2', 'max:20', 'unique:groups,name', 'required'];
         }
 
         return $rules;

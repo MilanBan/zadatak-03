@@ -2,27 +2,32 @@
 
 namespace App\Models;
 
-use App\Models\Group;
-use App\Models\Mentor;
 use App\Models\Assignment;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Group;
+use App\Models\Review;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Intern extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'firstName', 'lastName', 'city', 'address', 'email', 'telephone', 'cv', 'github' 
+        'group_id', 'firstName', 'lastName', 'city', 'address', 'email', 'telephone', 'cv', 'github',
     ];
 
-    
-    public function group() {
+    public function group()
+    {
         return $this->belongsTo(Group::class);
-            // ->using(Assignment::class);
     }
 
-    public function assignments() {
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function assignments()
+    {
         return $this->hasManyThrough(Assignment::class, Group::class);
     }
 
@@ -30,7 +35,7 @@ class Intern extends Model
         'city' => [
             'string',
             'min:2',
-            'max:20'
+            'max:20',
         ],
         'telephone' => [
             'string',
@@ -40,28 +45,32 @@ class Intern extends Model
         'firstName' => [
             'string',
             'min:2',
-            'max:20'
+            'max:20',
         ],
         'lastName' => [
             'string',
             'min:2',
-            'max:20'
+            'max:20',
         ],
         'email' => [
             'string',
             'email',
-            'max:255'
+            'max:255',
+            'unique:interns,email'
         ],
         'address' => [
             'string',
             'min:2',
         ],
         'cv' => [
-            'mimes:,doc,docx,pdf|max:10000'
+            'mimes:,doc,docx,pdf', 'max:10000',
         ],
-        'git' => [
+        'github' => [
             'string',
             'url',
+        ],
+        'group_id' => [
+            'exists:groups,id',
         ]
     ];
 }

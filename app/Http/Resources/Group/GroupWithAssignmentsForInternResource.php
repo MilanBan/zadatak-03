@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Group;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Assignment\AssignmentsForGroupResource;
 
-class GroupResource extends JsonResource
+class GroupWithAssignmentsForInternResource extends JsonResource
 {
-    public static $wrap = 'group';
     /**
      * Transform the resource into an array.
      *
@@ -16,9 +16,9 @@ class GroupResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => (string)$this->id,
+            'id' => $this->id,
             'name' => $this->name,
+            'assignments' => AssignmentsForGroupResource::collection($this->assignments),
         ];
     }
-    // return parent::toArray($request);
 }

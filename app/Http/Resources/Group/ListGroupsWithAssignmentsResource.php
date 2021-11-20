@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Helper;
+namespace App\Http\Resources\Group;
 
 use App\Http\Resources\InternsResource;
 use Illuminate\Http\Resources\Json\JsonResource;

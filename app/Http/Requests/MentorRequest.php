@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Mentor;
 use App\Http\Requests\UserRequest;
+use App\Models\Mentor;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MentorRequest extends FormRequest
@@ -26,17 +26,16 @@ class MentorRequest extends FormRequest
     public function rules()
     {
         $rulesU = new UserRequest;
-        $rulesU = $rulesU->rules(); 
-        
+        $rulesU = $rulesU->rules();
+
         $rulesM = Mentor::VALIDATION_RULES;
-        
-        
+
         if ($this->getMethod() == 'POST') {
-            array_push($rulesU['city'], 'required');
-            array_push($rulesM['skype'], 'required');
+            $rulesM['city'] = ['string', 'min:2', 'max:20', 'required'];
+            $rulesM['skype'] = ['string', 'min:2', 'max:20', 'required'];
         }
 
-        $rules = array_merge($rulesU,$rulesM);
+        $rules = array_merge($rulesU, $rulesM);
 
         return $rules;
     }

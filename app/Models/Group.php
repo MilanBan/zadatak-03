@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Assignment;
 use App\Models\Intern;
 use App\Models\Mentor;
-use App\Models\Assignment;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     protected $hidden = [
@@ -33,7 +33,7 @@ class Group extends Model
     public function assignments()
     {
         return $this->belongsToMany(Assignment::class)
-            ->withPivot([ 'created_at', 'start_date', 'finish_date', 'active']);
+            ->withPivot(['created_at', 'start_date', 'finish_date', 'active']);
     }
 
     public const VALIDATION_RULES = [
@@ -43,7 +43,7 @@ class Group extends Model
             'max:20',
             'unique:groups,name',
 
-        ]
+        ],
     ];
 
 }

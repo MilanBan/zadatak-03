@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
+use App\Models\Review;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserRequest extends FormRequest
+class ReviewRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,12 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = User::VALIDATION_RULES;
+        $rules = Review::VALIDATION_RULES;
 
         if ($this->getMethod() == 'POST') {
-            $rules['firstName'] = ['string', 'min:2', 'max:20', 'required'];
-            $rules['lastName'] = ['string', 'min:2', 'max:20', 'required'];
-            $rules['email'] = ['string', 'email', 'max:255', 'required', 'unique:users,email'];
-            $rules['password'] = ['required', 'string', 'confirmed', 'min:8'];
+            $rules['mark'] = ['integer', 'between:1,10', 'required'];
+            $rules['pros'] = ['string', 'min:1', 'max:1000', 'required'];
+            $rules['cons'] = ['string', 'min:1', 'max:1000', 'required'];
         }
 
         return $rules;

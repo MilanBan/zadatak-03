@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Group;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class IndexAssignmentsResource extends JsonResource
+class ListGroupsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,7 +15,7 @@ class IndexAssignmentsResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+            'id' => (string) $this->id,
             'name' => $this->name,
         ];
     }

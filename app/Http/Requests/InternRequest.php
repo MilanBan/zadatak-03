@@ -23,18 +23,20 @@ class InternRequest extends FormRequest
      * @return array
      */
     public function rules()
-    {  
+    {
         $rules = Intern::VALIDATION_RULES;
+
         
-        if ($this->getMethod() == 'POST') {
-            array_push($rules['city'], 'required');
-            array_push($rules['telephone'], 'required');
-            array_push($rules['firstName'], 'required');
-            array_push($rules['lastName'], 'required');
-            array_push($rules['email'],'required','unique:interns,email');            $rules['address'] = 'required';
-            array_push($rules['cv'], 'required');
-            array_push($rules['github'], 'required');
-        }
+            $rules['city'] = ['string', 'min:2', 'max:20', 'required'];
+            $rules['telephone'] = ['string', 'min:2', 'max:20', 'required'];
+            $rules['firstName'] = ['string', 'min:2', 'max:20', 'required'];
+            $rules['lastName'] = ['string', 'min:2', 'max:20', 'required'];
+            $rules['email'] = ['string', 'email', 'max:255', 'required', 'unique:interns,email'];
+            $rules['address'] = ['string', 'min:2', 'required'];
+            $rules['cv'] = ['mimes:,doc,docx,pdf', 'max:10000', 'required'];
+            $rules['github'] = ['string', 'url', 'required'];
+            $rules['group_id'] = ['exists:groups,id', 'required'];
+        
 
         return $rules;
     }

@@ -2,88 +2,152 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Group;
-use App\Models\Assignment;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\GroupRequest;
-use App\Http\Resources\GroupResource;
-use App\Http\Resources\ShowGroupResource;
+use App\Http\Requests\ReviewRequest;
+use App\Http\Resources\Group\GroupResource;
+use App\Http\Resources\Group\ListGroupsResource;
+use App\Http\Resources\Review\ReviewResource;
+use App\Models\Assignment;
+use App\Models\Group;
+use App\Models\Review;
 use Illuminate\Database\Eloquent\Collection;
-use App\Http\Resources\Helper\GroupWithMentorsResource;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class GroupController extends Controller
 {
-    public function index() {
-        return GroupWithMentorsResource::collection(Group::with(['mentors.user', 'interns', 'assignments'])->get());
+    public function index()
+    {
+        return ListGroupsResource::collection(Group::with(['mentors.user', 'interns', 'assignments'])->get());
     }
 
-    public function show($id) {
-        return new ShowGroupResource(Group::with('mentors.user', 'interns', 'assignments')->findOrFail($id));
+    public function show($id)
+    {
+        return new GroupResource(Group::with('mentors.user', 'interns', 'assignments')->findOrFail($id));
     }
 
-    public function store(GroupRequest $request) {
+    public function store(GroupRequest $request)
+    {
         $group = Group::create($request->all());
 
-        return new GroupResource($group);
+        return new ListGroupsResource($group);
     }
 
-    public function update(GroupRequest $request, Group $group) {
+    public function update(GroupRequest $request, Group $group)
+    {
         $group->update($request->all());
 
-        return new GroupResource($group);
+        return new ListGroupsResource($group);
     }
 
-    protected function activateAssignment($g_id, $a_id,Request $request) {
-        
+    protected function activateAssignment($group, $assignment, Request $request)
+    {
         DB::table('assignment_group')
-        ->where('group_id',$g_id)
-        ->where('assignment_id',$a_id)
-        ->where('active', 0)
-        ->update([
-            'active' => 1,
-            'start_date' => date('Y-m-d H:i:s'),
-            'finish_date' => $request->finish_date ? $request->finish_date : date('Y-m-d H:i:s', strtotime("+1 month")),
-        ]);
+            ->where('group_id', $group)
+            ->where('assignment_id', $assignment)
+            ->where('active', 0)
+            ->update([
+                'active' => 1,
+                'start_date' => date('Y-m-d H:i:s'),
+                'finish_date' => $request->finish_date ? $request->finish_date : date('Y-m-d H:i:s', strtotime("+1 month")),
+            ]);
 
         return $message = 'Assignment activated!';
-    }  
+    }
 
-    protected function deactivateAssignment($g_id, $a_id) {
+    protected function deactivateAssignment($group, $assignment)
+    {
 
         DB::table('assignment_group')
-        ->where('group_id',$g_id)
-        ->where('assignment_id',$a_id)
-        ->where('active', 1)
-        ->update([
-            'active' => 0
-        ]);
+            ->where('group_id', $group)
+            ->where('assignment_id', $assignment)
+            ->where('active', 1)
+            ->update([
+                'active' => 0,
+            ]);
 
         return $message = 'Assignment deactivated!';
     }
-   
-    public function activeChanger($g_id, $a_id,Request $request) {
-        $a =  Assignment::find($a_id);
-        $status = $a->groups[0]->pivot->active;
-        
-        if($status == 0) {
-            $message = $this->activateAssignment($g_id, $a_id, $request);
-        }else{
-            $message = $this->deactivateAssignment($g_id, $a_id);
+
+    public function activeChanger($group, $assignment, Request $request)
+    {
+        $a = Assignment::findOrFail($assignment)->groups()->where('group_id', $group)->first();
+
+        if (!$a) {
+            return response()->error("Group not found", 404);
         }
-        $a->refresh();
+        $status = $a->pivot->active;
+
+        if ($status == 0) {
+            $message = $this->activateAssignment($group, $assignment, $request);
+        } else {
+            $message = $this->deactivateAssignment($group, $assignment);
+        }
+
+        $refreshed_a_p = $a->pivot->refresh();
+
         $response = [
             'message' => $message,
-            'assignment' => $a->groups[0]->pivot->active ? [
-                'start_date' => $a->groups[0]->pivot->start_date,
-                'finish_date' => $a->groups[0]->pivot->finish_date,
-            ] : 'date is unset.'
+            'assignment' => $refreshed_a_p->active ? [
+                'start_date' => $refreshed_a_p->start_date,
+                'finish_date' => $refreshed_a_p->finish_date,
+            ] : 'date is unset.',
         ];
 
         return response()->json($response, 202);
     }
-        
-    public function destroy($id) {
+
+    public function createReviewForAssignment($group, $assignment, $intern, ReviewRequest $request)
+    {
+        $g = Group::with('assignments')->find($group);
+        if (!$g) {
+            return response()->error("Group with id = $group don't exists.", 404);
+        }
+
+        $a = $g->assignments()->firstWhere('id', $assignment);
+        if (!$a) {
+            return response()->error("Assignment with id = $assignment don't exists in group $g->name.", 404);
+        }
+
+        $i = $g->interns()->firstWhere('id', $intern);
+        if (!$i) {
+            return response()->error("Intern with id = $intern don't exists in group $g->name.", 404);
+        }
+
+        $review = $a->reviews()->where('assignment_id', $a->id)
+            ->where('mentor_id', auth('sanctum')->user()->id)
+            ->where('intern_id', $i->id)
+            ->first();
+
+        if ($review) {
+            $review->update([
+                'assignment_id' => $a->id,
+                'mentor_id' => auth('sanctum')->user()->id,
+                'intern_id' => $i->id,
+                'mark' => $request->mark,
+                'pros' => $request->pros,
+                'cons' => $request->cons,
+            ]);
+
+            return new ReviewResource($review);
+
+        } else {
+            $review = Review::create([
+                'assignment_id' => $a->id,
+                'mentor_id' => auth('sanctum')->user()->id,
+                'intern_id' => $i->id,
+                'mark' => $request->mark,
+                'pros' => $request->pros,
+                'cons' => $request->cons,
+            ]);
+
+            return new ReviewResource($review);
+        }
+    }
+
+    public function destroy($id)
+    {
         Group::find($id)->delete();
     }
 }

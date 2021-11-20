@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\User;
 use App\Models\Group;
+use App\Models\Review;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -22,11 +23,13 @@ class Mentor extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
+
     public function groups() {
         return $this->belongsToMany(Group::class);
     }
-    public function assignments() {
-        return $this->hasMany(Assignment::class);
+
+    public function reviews() {
+        return $this->hasMany(Review::class);
     }
     
     public const VALIDATION_RULES = [
@@ -39,6 +42,10 @@ class Mentor extends Model
             'string',
             'min:2',
             'max:20',
+        ],
+        'group_id' => [
+            'integer',
+            'exists:group_mentor,group_id'
         ]
     ];
 }

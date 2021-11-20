@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(GroupMentorSeeder::class);           // 10
         $this->call(AssignmentSeeder::class);           // 10
         $this->call(AssignmentGroupSeeder::class);           // 10
+        $this->call(ReviewSeeder::class);           // 10
     }
 }

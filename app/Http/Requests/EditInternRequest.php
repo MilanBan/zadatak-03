@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Assignment;
+use App\Models\Intern;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AssignmentRequest extends FormRequest
+class EditInternRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +24,7 @@ class AssignmentRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = Assignment::VALIDATION_RULES;
-
-        if ($this->getMethod() == 'POST') {
-            $rules['name'] = ['string', 'min:2', 'max:20', 'required'];
-            $rules['description'] = ['string', 'min:2', 'max:1000', 'required'];
-        }
+        $rules = Intern::VALIDATION_RULES;
 
         return $rules;
     }

@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Resources\Helper;
+namespace App\Http\Resources\Group;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Helper\ListMentorsResource;
+use App\Http\Resources\Intern\ListInternsResource;
+use App\Http\Resources\Mentor\ListMentorsResource;
+use App\Http\Resources\Assignment\AssignmentResource;
 
-class GroupWithMentorsResource extends JsonResource
+class GroupResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +18,11 @@ class GroupWithMentorsResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+            'id' => (string)$this->id,
             'name' => $this->name,
             'mentors' => ListMentorsResource::collection($this->mentors),
+            'interns' => ListInternsResource::collection($this->interns),
+            'assignments' => AssignmentResource::collection($this->assignments) 
         ];
     }
 }
