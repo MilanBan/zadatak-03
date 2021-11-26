@@ -56,7 +56,7 @@ class Intern extends Model
             'string',
             'email',
             'max:255',
-            'unique:interns,email'
+            'unique:interns,email',
         ],
         'address' => [
             'string',
@@ -71,6 +71,6 @@ class Intern extends Model
         ],
         'group_id' => [
             'exists:groups,id',
-        ]
+        ],
     ];
 }

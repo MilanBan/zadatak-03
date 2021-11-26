@@ -14,7 +14,7 @@ class InternSeeder extends Seeder
      */
     public function run()
     {
-        Intern::factory()->times(40)->create();
+        Intern::factory()->times(50)->create();
 
     }
 }

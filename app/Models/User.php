@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\Role;
 use App\Models\Mentor;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -24,7 +23,7 @@ class User extends Authenticatable
         'lastName',
         'email',
         'password',
-        'role_id'
+        'role_id',
     ];
 
     /**
@@ -46,11 +45,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function role() {
+    public function role()
+    {
         return $this->belongsTo(Role::class);
     }
 
-    public function mentor() {
+    public function mentor()
+    {
         return $this->belongsTo(Mentor::class);
     }
 
@@ -58,22 +59,22 @@ class User extends Authenticatable
         'firstName' => [
             'string',
             'min:2',
-            'max:20'
+            'max:20',
         ],
         'lastName' => [
             'string',
             'min:2',
-            'max:20'
+            'max:20',
         ],
         'email' => [
             'string',
             'email',
-            'max:255'
+            'max:255',
         ],
         'password' => [
             'string',
             'confirmed',
-            'min:8'
-        ]
+            'min:8',
+        ],
     ];
 }

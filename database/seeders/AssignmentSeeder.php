@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Faker\Factory;
-use App\Models\Assignment;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -18,11 +17,11 @@ class AssignmentSeeder extends Seeder
     {
         $f = Factory::create();
 
-        for ($i=1;$i<=10;$i++) { 
-               
+        for ($i = 1; $i <= 20; $i++) {
+
             DB::table('assignments')->insert(
                 [
-                    'name' => 'Assignment-'.$i,
+                    'name' => 'Assignment-' . $i,
                     'description' => $f->text(),
                     'created_at' => date('Y-m-d H:i:s'),
                 ]
